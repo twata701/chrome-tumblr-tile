@@ -20,7 +20,7 @@ tumblrTile || (function() {
         var config    = configStr ? JSON.parse(configStr) : {};
 
         var defaultConfig = {
-            hostname : "aoi-miyazaki.tumblr.com",
+            tag : "rena+nounen",
             baseWidth: 250,
             margin   : 10
         };
@@ -88,11 +88,11 @@ tumblrTile || (function() {
         param.api_key = self.config.apiKey;
 
         $.getJSON(
-            "https://api.tumblr.com/v2/blog/" + self.config.hostname + "/posts/photo",
+            "https://api.tumblr.com/v2/tagged?tag=" + self.config.tag + "&limit=100",
             param,
             function(json) {
 
-                json.response.posts.forEach(function(val, index, array) {
+                json.response.forEach(function(val, index, array) {
                     if ( ! val.photos ) {
                         return 1;
                     }
@@ -117,6 +117,7 @@ tumblrTile || (function() {
                     var altSize = val.photos[0].alt_sizes[diffSizes[0].index]
                     var div = '<div class="item"><a href="' + val.post_url + '"><img src="' + altSize.url+ '" width="' + altSize.width + '" height="' + altSize.height + '" /></a></div>';
                     func(div);
+                    param.before = val.timestamp
                 });
 
                 d.resolve();
